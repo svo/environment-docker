@@ -1,0 +1,35 @@
+
+    - name: Install python-pip
+      apt: pkg=python-pip update_cache=yes
+      sudo: yes
+      tags:
+      - docker
+      - run
+
+    - name: Install docker apt repository
+      apt_repository: repo='deb https://get.docker.com/ubuntu docker main' state=present
+      sudo: yes
+      tags:
+      - docker
+      - run
+
+    - name: Add docker apt key
+      apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=36A1D7869245C8950F966E92D8576A8BA88D21E9
+      sudo: yes
+      tags:
+      - docker
+      - run
+
+    - name: Install docker
+      apt: name=lxc-docker update_cache=yes
+      sudo: yes
+      tags:
+      - docker
+      - run
+
+    - name: Install docker-compose
+      pip: name=docker-compose
+      sudo: yes
+      tags:
+      - docker
+      - run
