@@ -33,7 +33,13 @@
       with_items:
       - linux-image-extra-{{ ansible_kernel }}
       - linux-image-extra-virtual
-      - docker-engine
+      tags:
+      - docker
+      - run
+
+    - name: Install docker
+      apt: name=docker-engine=1.9.1-0~trusty
+      become: yes
       tags:
       - docker
       - run
