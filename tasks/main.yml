@@ -39,7 +39,7 @@
       - run
 
     - name: Install docker-compose
-      pip: name=docker-compose version=1.10.0
+      pip: name=docker-compose
       become: yes
       tags:
       - docker
