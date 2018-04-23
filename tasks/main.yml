@@ -1,6 +1,13 @@
 
-    - name: Install python-pip
-      apt: pkg=python-pip update_cache=yes
+    - name: Install python3-pip
+      apt: pkg=python3-pip update_cache=yes
+      become: yes
+      tags:
+      - docker
+      - run
+
+    - name: Upgrade pip3
+      pip: name=pip extra_args=--upgrade executable=/usr/bin/pip3
       become: yes
       tags:
       - docker
@@ -39,7 +46,7 @@
       - run
 
     - name: Install docker-compose
-      pip: name=docker-compose
+      pip: name=docker-compose executable=/usr/bin/pip3
       become: yes
       tags:
       - docker
