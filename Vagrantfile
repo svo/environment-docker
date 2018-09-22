@@ -1,25 +1,29 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-VAGRANTFILE_API_VERSION = "2"
+VAGRANTFILE_API_VERSION = '2'.freeze
+PLAYBOOK = 'playbook.yml'.freeze
+
+unless Vagrant.has_plugin?('vagrant-cachier')
+  puts 'Install vagrant-cachier'
+  exec 'vagrant plugin install vagrant-cachier && vagrant up'
+end
+
+unless Vagrant.has_plugin?('vagrant-vbguest')
+  puts 'Install vagrant-vbguest'
+  exec 'vagrant plugin install vagrant-vbguest && vagrant up'
+end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box_url = "https://vagrantcloud.com/ubuntu/trusty64"
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.define 'debian', primary: true do |debian|
+    debian.vm.box = 'bento/debian-9.5'
 
-  config.vm.hostname = "vagrant-docker"
-  config.vm.network :private_network, type: "dhcp"
+    debian.vm.hostname = 'vagrant-docker'
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook.yml"
-    ansible.tags = "docker"
-  end
+    debian.vm.provision 'ansible' do |ansible|
+      ansible.playbook = PLAYBOOK
+    end
 
-  if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.scope = :machine
-  end
-
-  config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    debian.cache.scope = :machine if Vagrant.has_plugin?('vagrant-cachier')
   end
 end
